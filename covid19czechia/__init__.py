@@ -9,6 +9,10 @@ Todo:
     * Caching
 """
 
+# ===== modules =====
+from .mzcr import *
+# ===================
+
 import pkg_resources
 
 try:
