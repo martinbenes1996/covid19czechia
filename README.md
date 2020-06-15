@@ -5,7 +5,7 @@ Python package [covid19czechia](https://pypi.org/project/covid19czechia/) provid
 
 The data is scraped from
 
-* Ministery of Health, Czech Republic
+* Ministry of Health, Czech Republic
 * Czech Statistical Office
 
 ## Setup and usage
