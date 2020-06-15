@@ -62,6 +62,6 @@ def set_age_groups(callback):
     global age_to_group
     age_to_group = callback
 
-__all__ = ["deaths_covid","set_age_groups"]
+__all__ = ["deaths_covid","set_age_groups","age_to_group"]
 
     
