@@ -25,7 +25,7 @@ class TestMzcr(unittest.TestCase):
         self.assertNotEqual(grouper(99), grouper(100))
     
     def test_covid_deaths(self, *args, **kwargs):
-        data = CZ.deaths_covid(*args, **kwargs)
+        data = CZ.covid_deaths(*args, **kwargs)
         
         # datatype
         self.assertIsInstance(data, pd.DataFrame)

@@ -21,7 +21,7 @@ Importing module is done such as
 ```python
 import covid19czechia as CZ
 
-x = CZ.deaths_covid()
+x = CZ.covid_deaths()
 ```
 
 Package is regularly updated. Update with
@@ -35,7 +35,7 @@ pip install --upgrade covid19czechia
 Get Covid-19 deaths in Czechia (weekly counts, by gender and age group)
 
 ```python
-x = CZ.deaths_covid()
+x = CZ.covid_deaths()
 ```
 
 The function returns Pandas dataframe. It can be stored to csv file with
@@ -52,25 +52,25 @@ the deaths are computed in.
 Defaultly (`level = 1`) the deaths are taken from the whole Czechia.
 
 ```python
-x = CZ.deaths_covid(level = 1) # same as no argument given (above)
+x = CZ.covid_deaths(level = 1) # same as no argument given (above)
 ```
 
 Settings `level = 2` corresponds with deaths in regions (*kraje*, NUTS 3).
 
 ```python
-x = CZ.deaths_covid(level = 2)
+x = CZ.covid_deaths(level = 2)
 ```
 
 Setting `level = 3` means deaths per district (*okresy*, LAU 1).
 
 ```python
-x = CZ.deaths_covid(level = 3)
+x = CZ.covid_deaths(level = 3)
 ```
 
-Read more about administrive units of Czech Republic
+Read more about administrative units of Czech Republic
 [here](https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_Czech_Republic).
 
 ## Total weekly deaths
 
-**TODO**
+For total deaths check my another package [eurostat_deaths](https://github.com/martinbenes1996/eurostat_deaths).
 

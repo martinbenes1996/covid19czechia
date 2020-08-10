@@ -16,7 +16,7 @@ def _age_to_group5(age):
 
 age_to_group = _age_to_group5
 
-def deaths_covid(level = 1):
+def covid_deaths(level = 1):
     """Returns deaths for COVID-19 in Czechia.
     
     The deaths are aggregated by week, age group (by 5 years) and sex.
@@ -62,6 +62,6 @@ def set_age_groups(callback):
     global age_to_group
     age_to_group = callback
 
-__all__ = ["deaths_covid","set_age_groups","age_to_group"]
+__all__ = ["covid_deaths","set_age_groups","age_to_group"]
 
     
