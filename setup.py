@@ -12,7 +12,7 @@ with open("README.md", "r", encoding="UTF-8") as fh:
 
 setuptools.setup(
   name = 'covid19czechia',
-  version = '0.1.1',
+  version = '0.2.0',
   author = 'Martin Beneš',
   author_email = 'martinbenes1996@gmail.com',
   description = 'Web Scraper for Czechia COVID19 data.',
@@ -21,10 +21,11 @@ setuptools.setup(
   packages=setuptools.find_packages(),
   license='MPL',
   url = 'https://github.com/martinbenes1996/covid19czechia',
-  download_url = 'https://github.com/martinbenes1996/covid19czechia/archive/0.1.1.tar.gz',
+  download_url = 'https://github.com/martinbenes1996/covid19czechia/archive/0.2.1.tar.gz',
   keywords = ['2019-nCov', 'czechia', 'coronavirus', 'covid-19', 'covid-data', 'covid19-data'],
   install_requires=reqs,
   package_dir={'': '.'},
+  package_data={'': ['data/*.json','data/*.csv']},
   classifiers=[
     'Development Status :: 4 - Beta',
     'Intended Audience :: Science/Research',
