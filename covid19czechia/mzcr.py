@@ -6,6 +6,8 @@ import warnings
 import pandas as pd
 import requests
 
+from . import offline
+
 # change to have different age_groups
 def _group5_to_range(group):
     return group * 5, group * 5 + 4
@@ -15,8 +17,7 @@ def _age_to_group5(age):
     return f"{group_range[0]}_{group_range[1]}"
 
 age_to_group = _age_to_group5
-
-def covid_deaths(level = 1):
+def covid_deaths(level = 1, usecache = False):
     """Returns deaths for COVID-19 in Czechia.
     
     The deaths are aggregated by week, age group (by 5 years) and sex.
@@ -34,17 +35,21 @@ def covid_deaths(level = 1):
         return None
     
     # download
-    mzcr_deaths_url = 'https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/umrti.csv'
-    mzcr_deaths_response = requests.get(mzcr_deaths_url)
+    x = offline.read_deaths() if usecache else None
+    if x is None:
+        mzcr_deaths_url = 'https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/umrti.csv'
+        mzcr_deaths_response = requests.get(mzcr_deaths_url)
     
-    # read csv
-    x = pd.read_csv( StringIO(mzcr_deaths_response.text) )
-    x.columns = ["date","age","sex","region","district"]
-    x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
-    x["sex"] = x["sex"].apply(lambda s: {"M":"M", "Z":"F"}[s])
-    # alter values
-    x["age_group"] = x["age"].apply(age_to_group)
-    x["week"] = x["date"].apply(lambda dt: dt.isocalendar()[1])
+        # read csv
+        x = pd.read_csv( StringIO(mzcr_deaths_response.text) )
+        x.columns = ["date","age","sex","region","district"]
+        x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
+        x["sex"] = x["sex"].apply(lambda s: {"M":"M", "Z":"F"}[s])
+        # alter values
+        x["age_group"] = x["age"].apply(age_to_group)
+        x["week"] = x["date"].apply(lambda dt: dt.isocalendar()[1])
+
+        offline.write_deaths(x) # cache write back
     
     # country level
     if level == 1:
