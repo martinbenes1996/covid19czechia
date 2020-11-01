@@ -21,7 +21,7 @@ setuptools.setup(
   packages=setuptools.find_packages(),
   license='MPL',
   url = 'https://github.com/martinbenes1996/covid19czechia',
-  download_url = 'https://github.com/martinbenes1996/covid19czechia/archive/0.2.1.tar.gz',
+  download_url = 'https://github.com/martinbenes1996/covid19czechia/archive/0.2.0.tar.gz',
   keywords = ['2019-nCov', 'czechia', 'coronavirus', 'covid-19', 'covid-data', 'covid19-data'],
   install_requires=reqs,
   package_dir={'': '.'},
