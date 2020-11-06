@@ -50,7 +50,9 @@ def covid_deaths(level = 1, usecache = False):
         x["week"] = x["date"].apply(lambda dt: dt.isocalendar()[1])
 
         offline.write_deaths(x) # cache write back
-    
+    else:
+        x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
+        
     # country level
     if level == 1:
         x = x.groupby(["date","week","age_group","sex"]).size().reset_index(name = 'deaths')
