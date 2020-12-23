@@ -51,7 +51,10 @@ def covid_deaths(level = 1, usecache = False):
 
         offline.write_deaths(x) # cache write back
     else:
-        x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
+        try:
+            x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
+        except:
+            pass
         
     # country level
     if level == 1:
