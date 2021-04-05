@@ -30,20 +30,6 @@ Package is regularly updated. Update with
 pip install --upgrade covid19czechia
 ```
 
-## COVID-19 Deaths
-
-Get Covid-19 deaths in Czechia (weekly counts, by gender and age group)
-
-```python
-x = CZ.covid_deaths()
-```
-
-The function returns Pandas dataframe. It can be stored to csv file with
-
-```python
-x.to_csv("filename.csv", header = True, index = False)
-```
-
 ## COVID-19 Cases
 
 Get Covid-19 cases in Czechia.
@@ -81,6 +67,20 @@ x2 = CZ.covid_tests(level = 2) # region
 x3 = CZ.covid_tests(level = 3) # district
 ```
 
+## COVID-19 Deaths
+
+Get Covid-19 deaths in Czechia (weekly counts, by gender and age group)
+
+```python
+x = CZ.covid_deaths()
+```
+
+The function returns Pandas dataframe. It can be stored to csv file with
+
+```python
+x.to_csv("filename.csv", header = True, index = False)
+```
+
 ### Administrative unit setting
 
 Optional parameter `level` sets granularity of administrative units
@@ -110,4 +110,5 @@ Read more about administrative units of Czech Republic
 ## Total weekly deaths
 
 For total deaths check my another package [eurostat_deaths](https://github.com/martinbenes1996/eurostat_deaths).
+
 
