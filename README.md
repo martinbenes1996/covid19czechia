@@ -44,6 +44,43 @@ The function returns Pandas dataframe. It can be stored to csv file with
 x.to_csv("filename.csv", header = True, index = False)
 ```
 
+## COVID-19 Cases
+
+Get Covid-19 cases in Czechia.
+
+```python
+x = CZ.covid_confirmed_cases()
+```
+
+Aggregated dataframe countrywise / regionwise / districtwise can be fetched using
+
+```python
+x1 = CZ.covid_confirmed(level = 1) # country
+x2 = CZ.covid_confirmed(level = 2) # region
+x3 = CZ.covid_confirmed(level = 3) # district
+```
+
+The data contains counts by age, age group and sex and information of week. To aggregate results only over some of the groups (example - per day)
+
+```python
+x = x\
+    .groupby(['date','week'])\
+    .aggregate({'confirmed': 'sum'})\
+    .reset_index()
+```
+
+Result of the example contains columns day, week and confirmed.
+
+## COVID-19 Tests
+
+Get Covid-19 tests in Czechia.
+
+```python
+x1 = CZ.covid_tests(level = 1) # country
+x2 = CZ.covid_tests(level = 2) # region
+x3 = CZ.covid_tests(level = 3) # district
+```
+
 ### Administrative unit setting
 
 Optional parameter `level` sets granularity of administrative units
