@@ -10,11 +10,14 @@ from . import offline
 
 # change to have different age_groups
 def _group5_to_range(group):
-    return group * 5, group * 5 + 4
+    return int(group * 5), int(group * 5 + 4)
 def _age_to_group5(age):
-    group = age // 5
+    try:
+        group = int(age) // 5
+    except:
+        return "UNK"
     group_range = _group5_to_range(group)
-    return f"{group_range[0]}_{group_range[1]}"
+    return "%d_%d" % group_range
 
 age_to_group = _age_to_group5
 def covid_deaths(level = 1, usecache = False):
@@ -84,7 +87,7 @@ def covid_confirmed_cases(usecache = False):
         x = pd.read_csv( StringIO(mzcr_tests_response.text) )
         x.columns = ["date","age","sex","region","district",'infected_abroad','country_of_infection']
         x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
-        x["age"] = x.age.apply(int)
+        x["age"] = x.age.apply(float)
         x["sex"] = x["sex"].apply(lambda s: {"M":"M", "Z":"F"}[s])
         # alter values
         x["age_group"] = x["age"].apply(age_to_group)
@@ -202,8 +205,77 @@ def covid_tests(level = 1, usecache = False):
     
     return x
 
+def covid_recovered_cases(usecache = False):
+    """Returns recovered cases for COVID-19 in Czechia.
+    
+    Args:
+        usecache (bool): True to use cache otherwise from source. By default False.
+    """
+    # download
+    x = offline.read_recovered() if usecache else None
+    if x is None:
+        mzcr_recovered_url = 'https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/vyleceni.csv'
+        mzcr_recovered_response = requests.get(mzcr_recovered_url)
+
+        # read csv
+        x = pd.read_csv( StringIO(mzcr_recovered_response.text) )
+        x.columns = ["date","age","sex","region","district"]
+        x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
+        x["age"] = x.age.apply(float)
+        x["sex"] = x["sex"].apply(lambda s: {"M":"M", "Z":"F"}[s])
+        # alter values
+        x["age_group"] = x["age"].apply(age_to_group)
+        x["week"] = x["date"].apply(lambda dt: dt.isocalendar()[1])
+        # remove columns
+        x = x[['date','age','sex','region','district','age_group','week']]\
+            .sort_values(['date','region','district','age','sex'])
+        
+        offline.write_recovered(x) # cache write back
+    else:
+        try:
+            x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
+        except:
+            pass
+    return x\
+        .reset_index(drop = True)
+
+def covid_recovered(level = 1, usecache = False):
+    """Returns recovered for COVID-19 in Czechia.
+    
+    Setting of parameter *level* sets granularity of administrative unit.
+    
+    Args:
+        level (int, optional): Granularity of administrative unit.
+            * by country (level = 1) = default
+            * by region (level = 2)
+            * by district (level = 3)
+        usecache (bool): True to use cache otherwise from source. By default False.
+    """
+    # fallback
+    if level > 3 or level < 1:
+        warnings.warn("invalid level")
+        return None
+    
+    # fetch cases
+    x = covid_recovered_cases(usecache = usecache)
+    
+    # country level
+    if level == 1:
+        x = x.groupby(["date","week","age","age_group","sex"]).size().reset_index(name = 'confirmed')
+    # region level
+    elif level == 2:
+        x = x.groupby(["date","week","age","age_group","sex","region"]).size().reset_index(name = 'confirmed')
+    # district level
+    elif level == 3:
+        x = x.groupby(["date","week","age","age_group","sex","region","district"]).size().reset_index(name = 'confirmed')
+    
+    return x
+
 def set_age_groups(callback):
     global age_to_group
     age_to_group = callback
 
-__all__ = ["covid_deaths","covid_confirmed_cases","covid_confirmed","covid_tests","set_age_groups","age_to_group"]
+__all__ = ["covid_deaths","covid_tests",
+           "covid_confirmed_cases","covid_confirmed",
+           "covid_recovered_cases","covid_recovered",
+           "set_age_groups","age_to_group"]

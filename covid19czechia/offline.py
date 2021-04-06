@@ -6,6 +6,7 @@ import pkg_resources
 DEATHS = pkg_resources.resource_filename(__name__, "data/deaths.csv")
 CASES = pkg_resources.resource_filename(__name__, "data/cases.csv")
 TESTS = pkg_resources.resource_filename(__name__, "data/tests.csv")
+RECOVERED = pkg_resources.resource_filename(__name__, "data/recovered.csv")
 _cache = {}
 
 def read_deaths():
@@ -58,7 +59,25 @@ def write_tests(cases):
     global _cache
     cases.to_csv(TESTS, index = False)
     _cache['tests'] = cases
+    
+def read_recovered():
+    """Read cache."""
+    global _cache
+    try:
+        if 'recovered' not in _cache:
+            _cache['recovered'] = pd.read_csv(RECOVERED)
+    except:
+        return None
+    else:
+        return _cache['recovered']
+
+def write_recovered(cases):
+    """Write cache."""
+    global _cache
+    cases.to_csv(RECOVERED, index = False)
+    _cache['recovered'] = cases
 
 __all__ = ["read_deaths","write_deaths",
            "read_cases","write_cases",
-           "read_tests","write_tests"]
+           "read_tests","write_tests",
+           "read_recovered","write_recovered"]
