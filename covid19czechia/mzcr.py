@@ -261,13 +261,13 @@ def covid_recovered(level = 1, usecache = False):
     
     # country level
     if level == 1:
-        x = x.groupby(["date","week","age","age_group","sex"]).size().reset_index(name = 'confirmed')
+        x = x.groupby(["date","week","age","age_group","sex"]).size().reset_index(name = 'recovered')
     # region level
     elif level == 2:
-        x = x.groupby(["date","week","age","age_group","sex","region"]).size().reset_index(name = 'confirmed')
+        x = x.groupby(["date","week","age","age_group","sex","region"]).size().reset_index(name = 'recovered')
     # district level
     elif level == 3:
-        x = x.groupby(["date","week","age","age_group","sex","region","district"]).size().reset_index(name = 'confirmed')
+        x = x.groupby(["date","week","age","age_group","sex","region","district"]).size().reset_index(name = 'recovered')
     
     return x
 
