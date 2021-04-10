@@ -163,6 +163,7 @@ def covid_tests(level = 1, usecache = False):
         # read csv
         x = pd.read_csv( StringIO(mzcr_tests_response.text) )
         x.columns = ['date','tests','cumtests','tests_new','cumtests_new']
+        x['date'] = x.date.apply(lambda d: datetime.strptime(d,'%Y-%m-%d'))
         x = x[['date','tests']]
         return x
     
