@@ -156,12 +156,21 @@ def covid_tests(level = 1, usecache = False):
         warnings.warn("invalid level")
         return None
     
+    # country level
+    if level == 1:
+        mzcr_tests_url = 'https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/testy.csv'
+        mzcr_tests_response = requests.get(mzcr_tests_url)
+        # read csv
+        x = pd.read_csv( StringIO(mzcr_tests_response.text) )
+        x.columns = ['date','tests','cumtests','tests_new','cumtests_new']
+        x = x[['date','tests']]
+        return x
+    
     # download
     x = offline.read_tests() if usecache else None
     if x is None:
         mzcr_tests_url = 'https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/kraj-okres-testy.csv'
         mzcr_tests_response = requests.get(mzcr_tests_url)
-    
         # read csv
         x = pd.read_csv( StringIO(mzcr_tests_response.text) )
         x.columns = ["date","region","district",
@@ -176,17 +185,9 @@ def covid_tests(level = 1, usecache = False):
             x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
         except:
             pass
-    # country level
-    if level == 1:
-        x = x\
-            .drop_duplicates(subset = ['date','week','region_tests',"region_tests_first"])\
-            .groupby(['date','week'])\
-            .aggregate({'region_tests': 'sum', 'region_tests_first': 'sum'})\
-            .rename({'region_tests': 'tests', 'region_tests_first': 'tests_first'}, axis=1)\
-            .reset_index()
             
     # region level
-    elif level == 2:
+    if level == 2:
         x = x\
             .drop_duplicates(subset = ['date','week','region','region_tests',"region_tests_first"])\
             .groupby(['date','week','region'])\
