@@ -45,6 +45,7 @@ def covid_deaths(level = 1, usecache = False):
     
         # read csv
         x = pd.read_csv( StringIO(mzcr_deaths_response.text) )
+        x = x.drop('id', axis = 1)
         x.columns = ["date","age","sex","region","district"]
         x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
         x["sex"] = x["sex"].apply(lambda s: {"M":"M", "Z":"F"}[s])
@@ -85,6 +86,7 @@ def covid_confirmed_cases(usecache = False):
 
         # read csv
         x = pd.read_csv( StringIO(mzcr_tests_response.text) )
+        x = x.drop(['id', 'reportovano_khs'], axis = 1)
         x.columns = ["date","age","sex","region","district",'infected_abroad','country_of_infection']
         x["date"] = x["date"].apply(lambda s: datetime.strptime(s, "%Y-%m-%d"))
         x["age"] = x.age.apply(float)
@@ -174,6 +176,7 @@ def covid_tests(level = 1, usecache = False):
         mzcr_tests_response = requests.get(mzcr_tests_url)
         # read csv
         x = pd.read_csv( StringIO(mzcr_tests_response.text) )
+        x = x.drop('id', axis = 1)
         x.columns = ["date","region","district",
                      "district_tests","district_cumtests","region_tests","region_cumtests",
                      "district_tests_first","district_cumtests_first","region_tests_first","region_cumtests_first"]
